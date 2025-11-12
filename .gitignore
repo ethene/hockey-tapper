@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+
+# Production
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor directories
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Docker
+docker/mongo/data/
+
+# Claude Code session data
+.claude/
+
+# Playwright MCP screenshots and artifacts
+.playwright-mcp/
+
+# Visual testing artifacts
+visual-tests/
+
+# Development scratch
+dev/
+
+# Session archives (moved to docs/archive)
+docs/archive/

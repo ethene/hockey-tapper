@@ -1,0 +1,293 @@
+/**
+ * Design Tokens - Extracted from Figma: Telegram Hockey App - CG
+ *
+ * This file contains all design system tokens including colors, typography,
+ * spacing, border radii, shadows, and layout constants.
+ * Source: Section 1 (node-id: 68-2510)
+ */
+
+// =============================================================================
+// CSS Custom Properties (for runtime theming)
+// =============================================================================
+:root {
+  // ---------------------------------------------------------------------------
+  // Colors - Base
+  // ---------------------------------------------------------------------------
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-text-primary: #242021;
+
+  // ---------------------------------------------------------------------------
+  // Colors - Brand & Accent
+  // ---------------------------------------------------------------------------
+  --color-primary-red: #fb393a;
+  --color-primary-blue: #404fa0;
+  --color-secondary-blue-light: #a9d9e7;
+  --color-secondary-blue: #81a7f1;
+  --color-secondary-blue-medium: #3e69de;
+  --color-secondary-blue-bright: #6fa8ff;
+  --color-accent-light: #e5f3f7;
+  --color-accent-dark: #2e344a;
+  --color-accent-gold: #ffd700;
+
+  // ---------------------------------------------------------------------------
+  // Typography - Font Families
+  // ---------------------------------------------------------------------------
+  --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                       Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+
+  // ---------------------------------------------------------------------------
+  // Typography - Font Sizes
+  // ---------------------------------------------------------------------------
+  --font-size-small: 14px;
+  --font-size-base: 17px;
+  --font-size-large: 24px;
+  --font-size-xlarge: 48px;
+
+  // ---------------------------------------------------------------------------
+  // Typography - Font Weights
+  // ---------------------------------------------------------------------------
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  // ---------------------------------------------------------------------------
+  // Typography - Line Heights
+  // ---------------------------------------------------------------------------
+  --line-height-tight: 1.21;
+  --line-height-normal: 1.53;
+
+  // ---------------------------------------------------------------------------
+  // Typography - Letter Spacing
+  // ---------------------------------------------------------------------------
+  --letter-spacing-tight: -0.00588em; // -0.588%
+
+  // ---------------------------------------------------------------------------
+  // Spacing - Base Scale
+  // ---------------------------------------------------------------------------
+  --spacing-xs: 4px;
+  --spacing-sm: 6px;
+  --spacing-md: 8px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+
+  // ---------------------------------------------------------------------------
+  // Border Radius
+  // ---------------------------------------------------------------------------
+  --radius-sm: 2.67px;
+  --radius-base: 4px;
+  --radius-lg: 24px;
+
+  // ---------------------------------------------------------------------------
+  // Borders & Strokes
+  // ---------------------------------------------------------------------------
+  --stroke-thin: 1px;
+  --stroke-base: 1.5px;
+  --stroke-medium: 2px;
+  --stroke-thick: 4px;
+  --stroke-xlarge: 9px;
+  --stroke-xxlarge: 11px;
+
+  // ---------------------------------------------------------------------------
+  // Layout - Mobile Viewport
+  // ---------------------------------------------------------------------------
+  --viewport-width: 375px;
+  --viewport-height: 812px;
+
+  // ---------------------------------------------------------------------------
+  // Layout - Component Dimensions
+  // ---------------------------------------------------------------------------
+  --nav-bar-height: 34px;
+  --tab-bar-height: 80px;
+  --button-size-base: 80px;
+  --button-size-large: 120px;
+  --points-frame-height: 76px;
+  --player-size-small: 86px;
+  --player-size-medium: 129px;
+  --player-size-large: 182px;
+  --puck-size-small: 74px;
+  --puck-size-base: 84px;
+
+  // ---------------------------------------------------------------------------
+  // Effects - Opacity
+  // ---------------------------------------------------------------------------
+  --opacity-low: 0.3;
+  --opacity-medium: 0.6;
+  --opacity-high: 0.8;
+
+  // ---------------------------------------------------------------------------
+  // Effects - Blur
+  // ---------------------------------------------------------------------------
+  --blur-subtle: 4px;
+  --blur-medium: 10px;
+  --blur-strong: 48px;
+
+  // ---------------------------------------------------------------------------
+  // Shadows
+  // ---------------------------------------------------------------------------
+  --shadow-inset: inset 1px 2px 3px 0px rgba(0, 0, 0, 0.25);
+
+  // ---------------------------------------------------------------------------
+  // Z-Index Layers
+  // ---------------------------------------------------------------------------
+  --z-background: 0;
+  --z-content: 1;
+  --z-overlay: 10;
+  --z-modal: 20;
+  --z-nav: 30;
+}
+
+// =============================================================================
+// SCSS Variables (for compile-time usage)
+// =============================================================================
+
+// Colors
+$color-white: var(--color-white);
+$color-black: var(--color-black);
+$color-text-primary: var(--color-text-primary);
+$color-primary-red: var(--color-primary-red);
+$color-primary-blue: var(--color-primary-blue);
+$color-secondary-blue-light: var(--color-secondary-blue-light);
+$color-secondary-blue: var(--color-secondary-blue);
+$color-secondary-blue-medium: var(--color-secondary-blue-medium);
+$color-secondary-blue-bright: var(--color-secondary-blue-bright);
+$color-accent-light: var(--color-accent-light);
+$color-accent-dark: var(--color-accent-dark);
+$color-accent-gold: var(--color-accent-gold);
+
+// Typography
+$font-family-base: var(--font-family-base);
+$font-size-small: var(--font-size-small);
+$font-size-base: var(--font-size-base);
+$font-size-large: var(--font-size-large);
+$font-size-xlarge: var(--font-size-xlarge);
+$font-weight-regular: var(--font-weight-regular);
+$font-weight-medium: var(--font-weight-medium);
+$font-weight-bold: var(--font-weight-bold);
+$line-height-tight: var(--line-height-tight);
+$line-height-normal: var(--line-height-normal);
+$letter-spacing-tight: var(--letter-spacing-tight);
+
+// Spacing
+$spacing-xs: var(--spacing-xs);
+$spacing-sm: var(--spacing-sm);
+$spacing-md: var(--spacing-md);
+$spacing-lg: var(--spacing-lg);
+$spacing-xl: var(--spacing-xl);
+$spacing-2xl: var(--spacing-2xl);
+
+// Border Radius
+$radius-sm: var(--radius-sm);
+$radius-base: var(--radius-base);
+$radius-lg: var(--radius-lg);
+
+// Strokes
+$stroke-thin: var(--stroke-thin);
+$stroke-base: var(--stroke-base);
+$stroke-medium: var(--stroke-medium);
+$stroke-thick: var(--stroke-thick);
+
+// Layout
+$viewport-width: var(--viewport-width);
+$viewport-height: var(--viewport-height);
+$nav-bar-height: var(--nav-bar-height);
+$tab-bar-height: var(--tab-bar-height);
+$button-size-base: var(--button-size-base);
+$button-size-large: var(--button-size-large);
+$points-frame-height: var(--points-frame-height);
+
+// Effects
+$opacity-low: var(--opacity-low);
+$opacity-medium: var(--opacity-medium);
+$opacity-high: var(--opacity-high);
+$blur-subtle: var(--blur-subtle);
+$blur-medium: var(--blur-medium);
+$blur-strong: var(--blur-strong);
+$shadow-inset: var(--shadow-inset);
+
+// Z-Index
+$z-background: var(--z-background);
+$z-content: var(--z-content);
+$z-overlay: var(--z-overlay);
+$z-modal: var(--z-modal);
+$z-nav: var(--z-nav);
+
+// =============================================================================
+// Mixins - Typography
+// =============================================================================
+@mixin text-base {
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+}
+
+@mixin text-medium {
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-normal;
+  letter-spacing: $letter-spacing-tight;
+}
+
+@mixin text-small-bold {
+  font-family: $font-family-base;
+  font-size: $font-size-small;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+}
+
+@mixin text-large-bold {
+  font-family: $font-family-base;
+  font-size: $font-size-large;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+}
+
+@mixin text-xlarge {
+  font-family: $font-family-base;
+  font-size: $font-size-xlarge;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-tight;
+}
+
+// =============================================================================
+// Mixins - Layout
+// =============================================================================
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+@mixin mobile-frame {
+  width: 100%;
+  height: 100vh;
+  max-width: $viewport-width; // Cap at 375px for mobile frame look
+  margin: 0 auto; // Center on desktop
+  overflow: hidden;
+  position: relative;
+}
+
+// =============================================================================
+// Mixins - Effects
+// =============================================================================
+@mixin backdrop-blur($amount: $blur-strong) {
+  backdrop-filter: blur($amount);
+  -webkit-backdrop-filter: blur($amount);
+}
+
+@mixin shadow-inset {
+  box-shadow: $shadow-inset;
+}
