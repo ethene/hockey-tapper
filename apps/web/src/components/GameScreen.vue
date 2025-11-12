@@ -414,28 +414,16 @@ onUnmounted(() => {
 
 .character-container {
   position: relative;
-  width: clamp(150px, 180px, 220px); // Responsive sizing
-  height: clamp(150px, 180px, 220px); // Responsive sizing
+  // Fixed size since game container is capped at 375px (mobile-first for Telegram)
+  width: 180px;
+  height: 180px;
   margin-bottom: $spacing-xl;
   z-index: 2; // Above game content (z-content: 1)
 
-  // Responsive adjustments by breakpoint
+  // Slightly smaller on compact devices only
   @media (max-width: 374px) {
-    // Compact devices
     width: 150px;
     height: 150px;
-  }
-
-  @media (min-width: 768px) {
-    // Tablet and larger
-    width: 220px;
-    height: 220px;
-  }
-
-  @media (min-width: 1024px) {
-    // Desktop
-    width: 250px;
-    height: 250px;
   }
 }
 </style>

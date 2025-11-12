@@ -59,6 +59,7 @@ const triggerAnimation = () => {
 <style scoped lang="scss">
 .tap-button {
   position: relative;
+  // Fixed size since game container is capped at 375px (mobile-first for Telegram)
   width: $button-size-large;
   height: $button-size-large;
   padding: 0;
@@ -68,23 +69,10 @@ const triggerAnimation = () => {
   transition: transform 0.15s ease-out;
   touch-action: manipulation;
 
-  // Responsive sizing
+  // Slightly smaller on compact devices only
   @media (max-width: 374px) {
-    // Compact devices - smaller button
     width: 100px;
     height: 100px;
-  }
-
-  @media (min-width: 768px) {
-    // Tablet - larger button
-    width: 180px;
-    height: 180px;
-  }
-
-  @media (min-width: 1024px) {
-    // Desktop - much larger button
-    width: 220px;
-    height: 220px;
   }
 
   &:active,
