@@ -43,8 +43,8 @@
       <div class="character-container">
         <CharacterAnimation
           ref="characterRef"
-          :width="180"
-          :height="180"
+          :width="129"
+          :height="129"
           :scale="1"
           @shot-triggered="handleShotTriggered"
           @animation-complete="handleAnimationComplete"
@@ -53,10 +53,12 @@
       </div>
 
       <!-- Tappable puck area -->
-      <TapButton
-        :disabled="!isPlaying || shotInProgress"
-        @tap="handleTap"
-      />
+      <div class="tap-button-container">
+        <TapButton
+          :disabled="!isPlaying || shotInProgress"
+          @tap="handleTap"
+        />
+      </div>
 
       <!-- Visual feedback (Goal/Miss text, score popups) -->
       <FeedbackAnimation ref="feedbackRef" />
@@ -108,7 +110,7 @@ const score = ref(0);
 const timer = ref(30);
 const isPlaying = ref(false);
 const showModal = ref(false);
-const username = ref('Player');
+const username = ref(localStorage.getItem('hockey_tapper_username') || 'Player'); // Load from localStorage
 const isSavingScore = ref(false);
 const shotInProgress = ref(false);
 
@@ -155,11 +157,11 @@ const handleAnimationComplete = () => {
 
   // Launch puck after hit animation completes
   if (puckCanvasRef.value && isPlaying.value) {
-    // CORRECTED CHARACTER POSITION:
-    // Layout: padding-top(120) + ScoreBoard(60) + ComboDisplay(40) + Character(180)
-    // Character center: ~310px, bottom (stick): ~400px
+    // CORRECTED CHARACTER POSITION (updated for medium size):
+    // Layout: padding-top(120) + ScoreBoard(60) + ComboDisplay(40) + Character(129)
+    // Character center: ~285px, bottom (stick): ~349px
     // Launch from character's stick position (bottom of character)
-    const characterStickY = 410; // Fixed position where character's stick is
+    const characterStickY = 360; // Fixed position where character's stick is
     const characterX = canvasDimensions.value.width / 2; // Center horizontally
 
     const launchPos = {
@@ -356,7 +358,10 @@ const handleRestart = () => {
 
 const handleUsernameChange = (newUsername) => {
   console.log('Username changed:', newUsername);
-  username.value = newUsername || 'Player';
+  const validUsername = newUsername || 'Player';
+  username.value = validUsername;
+  // Persist to localStorage
+  localStorage.setItem('hockey_tapper_username', validUsername);
 };
 
 // Lifecycle
@@ -415,15 +420,27 @@ onUnmounted(() => {
 .character-container {
   position: relative;
   // Fixed size since game container is capped at 375px (mobile-first for Telegram)
-  width: 180px;
-  height: 180px;
-  margin-bottom: $spacing-xl;
+  width: 129px;
+  height: 129px;
+  margin-bottom: 60px; // Increased spacing for puck button below
   z-index: 2; // Above game content (z-content: 1)
 
   // Slightly smaller on compact devices only
   @media (max-width: 374px) {
-    width: 150px;
-    height: 150px;
+    width: 110px;
+    height: 110px;
+    margin-bottom: 50px;
+  }
+}
+
+.tap-button-container {
+  position: relative;
+  // Move button 10% lower - using margin-top to push it down
+  // Base viewport height is 812px, so 10% ≈ 81px
+  margin-top: 80px;
+
+  @media (max-width: 374px) {
+    margin-top: 70px; // Slightly less on smaller screens
   }
 }
 </style>

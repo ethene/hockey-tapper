@@ -46,8 +46,8 @@ const multiplierText = computed(() => {
 
 <style scoped lang="scss">
 .combo-display {
-  position: fixed;
-  top: 80px; // Below TopBar
+  position: absolute;
+  top: 100px; // Below TopBar (which has padding-top of ~88px)
   right: $spacing-lg;
   z-index: 6; // Above feedback (z-index: 5)
 
@@ -108,17 +108,10 @@ const multiplierText = computed(() => {
 // Responsive adjustments
 @media (max-width: 374px) {
   .combo-display {
-    top: 70px;
+    top: 90px;
     right: $spacing-md;
     padding: $spacing-xs $spacing-sm;
-    font-size: 11px;
-  }
-}
-
-@media (min-width: 768px) {
-  .combo-display {
-    top: 90px;
-    right: $spacing-xl;
+    font-size: 12px;
   }
 }
 </style>

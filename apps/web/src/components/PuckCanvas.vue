@@ -145,8 +145,8 @@ function renderPuck(timestamp) {
 
       const trailSprite = puckSprites.value.small;
       const trailDims = PUCK_CONFIG.dimensions.small;
-      // Trail size matches puck: 0.08 for subtle trail effect
-      const baseRenderSize = Math.max(trailDims.width, trailDims.height) * 0.08;
+      // Trail size: slightly larger than small puck for visibility
+      const baseRenderSize = Math.max(trailDims.width, trailDims.height) * 0.07;
       // Calculate scale based on actual canvas vs design canvas
       const scale = canvasWidth.value / VIEWPORT_CONFIG.baseCanvasDimensions.width;
       const renderSize = baseRenderSize * scale;
@@ -168,8 +168,20 @@ function renderPuck(timestamp) {
   const sprite = getCurrentSprite();
   if (sprite) {
     const dims = getPuckDimensions();
-    // Puck size: 0.10 = ~71px from 712px sprite (good balance: visible but not huge)
-    const baseRenderSize = Math.max(dims.width, dims.height) * 0.10;
+    // Puck size varies by state:
+    // - Flying (fast): 0.04 = ~28px from 712px sprite (smaller, fast-moving)
+    // - Default (medium): 0.06 = ~43px from 712px sprite (normal size)
+    // - Small (slow): 0.06 = ~10px from 168px sprite (smallest)
+    let sizeMultiplier;
+    if (isFlying.value && speed.value > 400) {
+      sizeMultiplier = 0.04; // Smaller for flying puck
+    } else if (speed.value < 100) {
+      sizeMultiplier = 0.06; // Small sprite already makes it tiny
+    } else {
+      sizeMultiplier = 0.06; // Default size
+    }
+
+    const baseRenderSize = Math.max(dims.width, dims.height) * sizeMultiplier;
     // Calculate scale based on actual canvas vs design canvas
     const scale = canvasWidth.value / VIEWPORT_CONFIG.baseCanvasDimensions.width;
     const renderSize = baseRenderSize * scale;

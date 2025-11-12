@@ -98,10 +98,13 @@ export const PUCK_CONFIG = {
 };
 
 /**
- * Target zone configuration
- * Targets form a CIRCLE AROUND the player (at x=187, y=410)
- * Full 360-degree shooting capability
- * SMALLER targets (60x60) for challenge
+ * Target zone configuration - RELATIVE POSITIONING
+ * All positions are PERCENTAGES of container (not pixels!)
+ * Container is mobile-frame capped at 375px width
+ * Targets positioned symmetrically around center (50%)
+ *
+ * Position format: { x: %, y: % } where % is 0-100
+ * Component will convert to pixels based on actual container size
  */
 export const TARGET_CONFIG = {
   zones: [
@@ -109,40 +112,40 @@ export const TARGET_CONFIG = {
       id: 'top',
       sprite: '/assets/targets/target-top.png',
       points: 200,
-      position: { x: 157, y: 20 }, // Top - highest position, ABOVE scoreboard
-      dimensions: { width: 60, height: 60 },
+      position: { x: 50, y: 0 }, // Center top (50% horizontal, at the very top - moved 10% higher)
+      dimensions: { width: 50, height: 50 }, // Reduced from 60x60
       accuracyBonusMax: 50,
     },
     {
       id: 'middle-left',
       sprite: '/assets/targets/target-middle.png',
       points: 100,
-      position: { x: 60, y: 320 }, // Left side - mid ice area
-      dimensions: { width: 60, height: 60 },
+      position: { x: 22, y: 31.5 }, // Left side (28% left of center)
+      dimensions: { width: 50, height: 50 }, // Reduced from 60x60
       accuracyBonusMax: 30,
     },
     {
       id: 'middle-right',
       sprite: '/assets/targets/target-middle.png',
       points: 100,
-      position: { x: 255, y: 320 }, // Right side - mid ice area
-      dimensions: { width: 60, height: 60 },
+      position: { x: 78, y: 31.5 }, // Right side (28% right of center, symmetric!)
+      dimensions: { width: 50, height: 50 }, // Reduced from 60x60
       accuracyBonusMax: 30,
     },
     {
       id: 'bottom-left',
       sprite: '/assets/targets/target-bottom-left.png',
       points: 50,
-      position: { x: 60, y: 500 }, // Bottom-left - lower ice area
-      dimensions: { width: 60, height: 60 },
+      position: { x: 30, y: 60 }, // Bottom-left (20% left of center - more spacing!)
+      dimensions: { width: 50, height: 50 }, // Reduced from 60x60
       accuracyBonusMax: 10,
     },
     {
       id: 'bottom-right',
       sprite: '/assets/targets/target-bottom-right.png',
       points: 50,
-      position: { x: 255, y: 500 }, // Bottom-right - lower ice area
-      dimensions: { width: 60, height: 60 },
+      position: { x: 70, y: 60 }, // Bottom-right (20% right of center, symmetric!)
+      dimensions: { width: 50, height: 50 }, // Reduced from 60x60
       accuracyBonusMax: 10,
     },
   ],

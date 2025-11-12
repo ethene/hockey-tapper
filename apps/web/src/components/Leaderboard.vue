@@ -112,7 +112,7 @@ defineExpose({ fetchLeaderboard });
 .leaderboard__error,
 .leaderboard__empty {
   text-align: center;
-  padding: $spacing-xl;
+  padding: $spacing-lg; // Reduced from xl
   color: rgba(0, 0, 0, 0.5);
   font-size: $font-size-small;
 }
@@ -123,13 +123,15 @@ defineExpose({ fetchLeaderboard });
   margin: 0;
   @include flex-column;
   gap: $spacing-xs;
+  max-height: 300px; // Limit height to fit in viewport
+  overflow-y: auto; // Enable scrolling if more than ~6 items
 }
 
 .leaderboard__item {
   @include flex-row;
   align-items: center;
-  gap: $spacing-md;
-  padding: $spacing-md;
+  gap: $spacing-sm; // Reduced from md
+  padding: $spacing-sm $spacing-md; // Reduced vertical padding
   background-color: rgba(0, 0, 0, 0.03);
   border-radius: $radius-base;
   font-size: $font-size-small;

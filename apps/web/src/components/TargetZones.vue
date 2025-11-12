@@ -22,13 +22,13 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { TARGET_CONFIG } from '@/config/animations.js';
+import { TARGET_CONFIG, PUCK_CONFIG, VIEWPORT_CONFIG } from '@/config/animations.js';
 import { useCanvasScaling } from '@/composables/useCanvasScaling.js';
 
 const emit = defineEmits(['targetHit', 'targetMissed']);
 
 // Responsive scaling
-const { scaleValue, scalePosition, scaleDimensions } = useCanvasScaling();
+const { scaleValue, scalePosition, scaleDimensions, canvasDimensions } = useCanvasScaling();
 
 // Target zones with hit tracking and scaled positions
 const zones = ref(
@@ -43,22 +43,24 @@ const zones = ref(
 const HIT_ANIMATION_DURATION = 300;
 
 /**
- * Calculate zone style (position and dimensions) - responsive
- * NOTE: Positions stay at base scale (1:1) because game container is capped at 375px.
- * Only dimensions scale for visual appeal on larger screens.
+ * Calculate zone style (position and dimensions) - PERCENTAGE-BASED
+ * Positions from config are percentages (0-100) of container dimensions
+ * This ensures consistent positioning across different viewport sizes
  */
 function getZoneStyle(zone) {
-  // Keep positions at base scale since container is capped at 375px max-width
+  // Use percentage positioning from config (no conversion needed!)
+  // CSS will handle the actual pixel calculation based on container size
   const position = zone.position;
 
   // Scale dimensions for better visibility on larger screens
   const scaledDimensions = scaleDimensions(zone.dimensions, 'uniform');
 
   return {
-    left: `${position.x}px`,
-    top: `${position.y}px`,
+    left: `${position.x}%`,
+    top: `${position.y}%`,
     width: `${scaledDimensions.width}px`,
     height: `${scaledDimensions.height}px`,
+    transform: 'translate(-50%, -50%)', // Center the target on its position
   };
 }
 
@@ -67,19 +69,24 @@ function getZoneStyle(zone) {
  * @param {object} puckPos - Puck position {x, y}
  * @param {number} puckRadius - Puck collision radius
  * @param {object} zone - Target zone
+ * @param {object} containerSize - Container dimensions {width, height}
  * @returns {boolean} - True if collision detected
  */
-function checkCollision(puckPos, puckRadius, zone) {
-  // Use base positions (no scaling) since container is capped at 375px
-  const position = zone.position;
+function checkCollision(puckPos, puckRadius, zone, containerSize) {
+  // Convert percentage position to pixels
+  const percentPos = zone.position;
+  const pixelX = (percentPos.x / 100) * containerSize.width;
+  const pixelY = (percentPos.y / 100) * containerSize.height;
+
   // Scale dimensions for collision box (matches visual size)
   const scaledDimensions = scaleDimensions(zone.dimensions, 'uniform');
 
+  // Target is centered on its position (due to transform: translate(-50%, -50%))
   const zoneBounds = {
-    left: position.x,
-    right: position.x + scaledDimensions.width,
-    top: position.y,
-    bottom: position.y + scaledDimensions.height,
+    left: pixelX - scaledDimensions.width / 2,
+    right: pixelX + scaledDimensions.width / 2,
+    top: pixelY - scaledDimensions.height / 2,
+    bottom: pixelY + scaledDimensions.height / 2,
   };
 
   // Circle-rectangle collision detection
@@ -92,25 +99,29 @@ function checkCollision(puckPos, puckRadius, zone) {
   const distanceY = puckPos.y - closestY;
   const distanceSquared = distanceX * distanceX + distanceY * distanceY;
 
-  // Check if distance is less than radius (use uniform scale for radius)
-  const scaledRadius = scaleValue(puckRadius, 'uniform');
-  return distanceSquared < scaledRadius * scaledRadius;
+  // Check if distance is less than radius (puckRadius is already scaled)
+  return distanceSquared < puckRadius * puckRadius;
 }
 
 /**
  * Calculate accuracy bonus based on distance from target center
  * @param {object} puckPos - Puck position {x, y}
  * @param {object} zone - Target zone
+ * @param {object} containerSize - Container dimensions {width, height}
  * @returns {number} - Bonus points (0 to zone.accuracyBonusMax)
  */
-function calculateAccuracyBonus(puckPos, zone) {
-  // Use base positions (no scaling) since container is capped at 375px
-  const position = zone.position;
+function calculateAccuracyBonus(puckPos, zone, containerSize) {
+  // Convert percentage position to pixels
+  const percentPos = zone.position;
+  const pixelX = (percentPos.x / 100) * containerSize.width;
+  const pixelY = (percentPos.y / 100) * containerSize.height;
+
   // Scale dimensions for accuracy calculation (matches visual/collision size)
   const scaledDimensions = scaleDimensions(zone.dimensions, 'uniform');
 
-  const centerX = position.x + scaledDimensions.width / 2;
-  const centerY = position.y + scaledDimensions.height / 2;
+  // Target is centered on its position
+  const centerX = pixelX;
+  const centerY = pixelY;
 
   // Calculate distance from center
   const distanceX = puckPos.x - centerX;
@@ -138,10 +149,36 @@ function calculateAccuracyBonus(puckPos, zone) {
 function checkPuckCollision(puckData) {
   const { position, velocity, speed } = puckData;
 
-  // Puck collision radius - MUST MATCH visual puck size!
-  // Visual puck is ~71px diameter (0.10 * 712), so radius = 35px
-  // But for challenge, use SMALLER radius = 25px (strict collision)
-  const puckRadius = 25; // Fixed radius, no speed scaling!
+  // Get container dimensions from canvasDimensions
+  const containerSize = {
+    width: canvasDimensions.value.width,
+    height: canvasDimensions.value.height,
+  };
+
+  // Calculate puck collision radius - MUST MATCH visual puck size!
+  // This uses the same logic as PuckCanvas.vue:167-187
+  let spriteDims;
+  let sizeMultiplier;
+
+  if (speed > 400) {
+    // Flying sprite (fast) - smaller
+    spriteDims = PUCK_CONFIG.dimensions.flying;
+    sizeMultiplier = 0.04;
+  } else if (speed < 100) {
+    // Small sprite (slow)
+    spriteDims = PUCK_CONFIG.dimensions.small;
+    sizeMultiplier = 0.06;
+  } else {
+    // Default sprite
+    spriteDims = PUCK_CONFIG.dimensions.default;
+    sizeMultiplier = 0.06;
+  }
+
+  // Calculate visual puck size with scaling (matches PuckCanvas rendering)
+  const baseRenderSize = Math.max(spriteDims.width, spriteDims.height) * sizeMultiplier;
+  const scale = containerSize.width / VIEWPORT_CONFIG.baseCanvasDimensions.width;
+  const renderSize = baseRenderSize * scale;
+  const puckRadius = renderSize / 2; // Collision radius = half of visual diameter
 
   // Check each zone
   for (const zone of zones.value) {
@@ -151,9 +188,9 @@ function checkPuckCollision(puckData) {
     }
 
     // Check collision
-    if (checkCollision(position, puckRadius, zone)) {
+    if (checkCollision(position, puckRadius, zone, containerSize)) {
       // Calculate accuracy bonus
-      const accuracyBonus = calculateAccuracyBonus(position, zone);
+      const accuracyBonus = calculateAccuracyBonus(position, zone, containerSize);
       const totalScore = zone.points + accuracyBonus;
 
       // Mark zone as hit
