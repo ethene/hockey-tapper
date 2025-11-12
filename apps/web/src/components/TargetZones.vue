@@ -44,14 +44,19 @@ const HIT_ANIMATION_DURATION = 300;
 
 /**
  * Calculate zone style (position and dimensions) - responsive
+ * NOTE: Positions stay at base scale (1:1) because game container is capped at 375px.
+ * Only dimensions scale for visual appeal on larger screens.
  */
 function getZoneStyle(zone) {
-  const scaledPosition = scalePosition(zone.position);
-  const scaledDimensions = scaleDimensions(zone.dimensions);
+  // Keep positions at base scale since container is capped at 375px max-width
+  const position = zone.position;
+
+  // Scale dimensions for better visibility on larger screens
+  const scaledDimensions = scaleDimensions(zone.dimensions, 'uniform');
 
   return {
-    left: `${scaledPosition.x}px`,
-    top: `${scaledPosition.y}px`,
+    left: `${position.x}px`,
+    top: `${position.y}px`,
     width: `${scaledDimensions.width}px`,
     height: `${scaledDimensions.height}px`,
   };
@@ -65,15 +70,16 @@ function getZoneStyle(zone) {
  * @returns {boolean} - True if collision detected
  */
 function checkCollision(puckPos, puckRadius, zone) {
-  // Calculate scaled zone bounds
-  const scaledPosition = scalePosition(zone.position);
-  const scaledDimensions = scaleDimensions(zone.dimensions);
+  // Use base positions (no scaling) since container is capped at 375px
+  const position = zone.position;
+  // Scale dimensions for collision box (matches visual size)
+  const scaledDimensions = scaleDimensions(zone.dimensions, 'uniform');
 
   const zoneBounds = {
-    left: scaledPosition.x,
-    right: scaledPosition.x + scaledDimensions.width,
-    top: scaledPosition.y,
-    bottom: scaledPosition.y + scaledDimensions.height,
+    left: position.x,
+    right: position.x + scaledDimensions.width,
+    top: position.y,
+    bottom: position.y + scaledDimensions.height,
   };
 
   // Circle-rectangle collision detection
@@ -86,8 +92,8 @@ function checkCollision(puckPos, puckRadius, zone) {
   const distanceY = puckPos.y - closestY;
   const distanceSquared = distanceX * distanceX + distanceY * distanceY;
 
-  // Check if distance is less than radius (also scale the radius)
-  const scaledRadius = scaleValue(puckRadius);
+  // Check if distance is less than radius (use uniform scale for radius)
+  const scaledRadius = scaleValue(puckRadius, 'uniform');
   return distanceSquared < scaledRadius * scaledRadius;
 }
 
@@ -98,12 +104,13 @@ function checkCollision(puckPos, puckRadius, zone) {
  * @returns {number} - Bonus points (0 to zone.accuracyBonusMax)
  */
 function calculateAccuracyBonus(puckPos, zone) {
-  // Calculate scaled target center
-  const scaledPosition = scalePosition(zone.position);
-  const scaledDimensions = scaleDimensions(zone.dimensions);
+  // Use base positions (no scaling) since container is capped at 375px
+  const position = zone.position;
+  // Scale dimensions for accuracy calculation (matches visual/collision size)
+  const scaledDimensions = scaleDimensions(zone.dimensions, 'uniform');
 
-  const centerX = scaledPosition.x + scaledDimensions.width / 2;
-  const centerY = scaledPosition.y + scaledDimensions.height / 2;
+  const centerX = position.x + scaledDimensions.width / 2;
+  const centerY = position.y + scaledDimensions.height / 2;
 
   // Calculate distance from center
   const distanceX = puckPos.x - centerX;
