@@ -4,11 +4,13 @@
 
 ![Hockey Tapper Banner](https://img.shields.io/badge/Hockey_Tapper-Production_Ready-00a86b?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+)
 
+[![Live Demo](https://img.shields.io/badge/🎮_Live_Demo-Play_Now-ff4154?style=for-the-badge)](https://hockey-tapper-web.vercel.app/)
+
 **A physics-based hockey tapper game showcasing Claude Code's AI-assisted development capabilities**
 
 Built entirely with **Claude Code** in 5 days using Figma designs, MCP integrations, and AI-powered workflows
 
-[🎮 Play Demo](#) • [📖 Documentation](docs/) • [🚀 Quick Start](#-quick-start) • [🤖 How It Was Built](#-built-with-claude-code)
+[🎮 Play Demo](https://hockey-tapper-web.vercel.app/) • [📖 Documentation](docs/) • [🚀 Quick Start](#-quick-start) • [🤖 How It Was Built](#-built-with-claude-code)
 
 ---
 
@@ -231,6 +233,70 @@ npm run dev
 **The game will open at `http://localhost:5173`**
 
 > **Note:** Frontend works standalone (localStorage mode) without backend!
+
+---
+
+## 🌐 Live Demo
+
+<div align="center">
+
+**[🎮 Play Now: https://hockey-tapper-web.vercel.app/](https://hockey-tapper-web.vercel.app/)**
+
+![Demo Mode](https://img.shields.io/badge/Demo_Mode-localStorage-blue?style=for-the-badge)
+
+</div>
+
+### 📦 How the Demo Works
+
+The live demo runs in **localStorage mode**, which means:
+
+✅ **No Backend Required**
+- All game data stored locally in your browser
+- Leaderboard persists between sessions
+- Works offline after initial load
+
+✅ **Persistent Username**
+- Your username is saved automatically
+- Scores are associated with your username
+- Data stays in your browser only
+
+✅ **Local Leaderboard**
+- Top 20 scores stored in `localStorage`
+- Limited to 1MB of browser storage
+- Each browser/device has its own leaderboard
+
+### 🗄️ localStorage Structure
+
+```javascript
+// Stored keys
+"hockey_tapper_username" → Your player name (string)
+"hockey_tapper_scores" → Array of score objects (JSON)
+
+// Score object format
+{
+  userId: "Player",      // Username
+  score: 1500,           // Final score
+  createdAt: "2025-01-12T..." // Timestamp
+}
+```
+
+### 🔄 Switching Between Modes
+
+**localStorage Mode (Demo):**
+```bash
+# Deploy frontend only
+cd apps/web
+npm run build
+npx vercel --prod
+```
+
+**Full Backend Mode (Local):**
+```bash
+# Requires MongoDB connection
+npm run dev  # Both frontend + backend
+```
+
+> **Note:** To use the full backend with MongoDB, see [DEPLOYMENT.md](DEPLOYMENT.md) for database setup instructions.
 
 ---
 
