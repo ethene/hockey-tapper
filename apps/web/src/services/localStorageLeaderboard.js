@@ -234,6 +234,67 @@ export const getStats = async () => {
 }
 
 /**
+ * Update the username of the most recent score(s)
+ * Used when a player changes their username after scoring
+ *
+ * @param {string} oldUsername - The old username to find
+ * @param {string} newUsername - The new username to set
+ * @param {number} maxAge - Maximum age in milliseconds to consider (default: 60 seconds)
+ * @returns {Promise<Object>} Response object with update count
+ */
+export const updateRecentUsername = async (oldUsername, newUsername, maxAge = 60000) => {
+  try {
+    // Get all scores
+    const scores = getScores()
+
+    // Sanitize usernames
+    const sanitizedOld = String(oldUsername).trim() || 'Player'
+    const sanitizedNew = String(newUsername).trim() || 'Player'
+
+    // If same username, no update needed
+    if (sanitizedOld.toLowerCase() === sanitizedNew.toLowerCase()) {
+      return {
+        message: 'No update needed',
+        updated: 0,
+      }
+    }
+
+    // Find scores from the old username within the time window
+    const now = Date.now()
+    let updateCount = 0
+
+    scores.forEach((score) => {
+      // Check if this score matches the old username and is recent
+      if (
+        score.username.toLowerCase() === sanitizedOld.toLowerCase() &&
+        now - score.timestamp <= maxAge
+      ) {
+        score.username = sanitizedNew
+        updateCount++
+      }
+    })
+
+    // Save updated scores
+    if (updateCount > 0) {
+      saveScores(scores)
+      console.log(`[DEMO] Updated ${updateCount} score(s) from "${sanitizedOld}" to "${sanitizedNew}"`)
+    }
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          message: `Updated ${updateCount} score(s)`,
+          updated: updateCount,
+        })
+      }, 50)
+    })
+  } catch (error) {
+    console.error('Error updating username:', error)
+    throw new Error('Failed to update username')
+  }
+}
+
+/**
  * Check if localStorage is available
  *
  * @returns {boolean} True if localStorage is available

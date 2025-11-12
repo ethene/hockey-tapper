@@ -154,6 +154,24 @@ export async function clearLeaderboard() {
 }
 
 /**
+ * Update username of recent scores (demo mode only)
+ * Useful when a player changes their name after scoring
+ * @param {string} oldUsername - The old username to find
+ * @param {string} newUsername - The new username to set
+ * @returns {Promise<object>} Response data
+ */
+export async function updateRecentUsername(oldUsername, newUsername) {
+  if (DEMO_MODE) {
+    console.log('[DEMO] Updating recent username:', oldUsername, '->', newUsername);
+    return await localStorageLeaderboard.updateRecentUsername(oldUsername, newUsername);
+  }
+
+  // Backend mode: not supported (scores are immutable in backend)
+  console.warn('updateRecentUsername is only available in demo mode');
+  return { message: 'Not supported in backend mode', updated: 0 };
+}
+
+/**
  * Check if running in demo mode
  * @returns {boolean} True if in demo mode
  */
@@ -167,6 +185,7 @@ export default {
   getUserScores,
   checkHealth,
   clearLeaderboard,
+  updateRecentUsername,
   isDemoMode,
   DEMO_MODE,
 };

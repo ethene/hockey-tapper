@@ -46,6 +46,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
 import Leaderboard from './Leaderboard.vue';
+import { updateRecentUsername } from '../services/api.js';
 
 const props = defineProps({
   score: {
@@ -63,6 +64,9 @@ const STORAGE_KEY = 'hockey_tapper_username';
 // Load username from localStorage immediately (before watchers run!)
 const username = ref(localStorage.getItem(STORAGE_KEY) || 'Player');
 
+// Track the original username when modal opens (for updating scores)
+const originalUsername = ref(username.value);
+
 const formattedScore = computed(() => {
   return props.score.toLocaleString();
 });
@@ -76,12 +80,23 @@ const handleUsernameChange = () => {
   }
 };
 
-const handleUsernameSubmit = (event) => {
+const handleUsernameSubmit = async (event) => {
   // Blur the input to dismiss keyboard on mobile
   event.target.blur();
 
   // Ensure the username is saved
   handleUsernameChange();
+
+  // Update recent scores if username changed
+  const newUsername = username.value.trim() || 'Player';
+  if (originalUsername.value !== newUsername) {
+    try {
+      await updateRecentUsername(originalUsername.value, newUsername);
+      console.log(`Username updated from "${originalUsername.value}" to "${newUsername}"`);
+    } catch (error) {
+      console.error('Failed to update username on scores:', error);
+    }
+  }
 
   // Refresh leaderboard to show updated name
   setTimeout(() => {
@@ -96,6 +111,9 @@ const handleRestart = () => {
 // Refresh leaderboard and emit username when modal opens
 watch(() => props.score, (newScore) => {
   if (newScore > 0) {
+    // Store the original username when modal opens
+    originalUsername.value = username.value || 'Player';
+
     // Emit current username
     emit('usernameChange', username.value || 'Player');
 
